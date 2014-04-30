@@ -26,8 +26,16 @@ module.exports = function(grunt) {
             'node_modules/jquery/dist/jquery.js'
            ] }
      }
-    } 
+    },
+    watch: {
+     all: {
+      files: ['src/**/*.js', 'test/**/*.js'],
+      tasks: ['default'] 
+     }
+   }
   });
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-jasmine');
+  grunt.loadNpmTasks('grunt-contrib-watch');
+  grunt.registerTask('default', ['jshint', 'jasmine']);
 };
