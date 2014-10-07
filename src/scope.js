@@ -1,31 +1,28 @@
 /* jshint globalstrict: true */
 'use strict';
-function initWatchVal(){}
 
-function Scope() {
+function Scope(){
   this.$$watchers = [];
 }
 
-Scope.prototype.$watch = function(watcherFn, listenerFn){
-  var watcher = {
-    watcherFn: watcherFn,
-    listenerFn: listenerFn,
-    last: initWatchVal
+Scope.prototype.$watch = function(thingToWatch, thingToCall){
+  var obj = {
+    watchFn: thingToWatch,
+    listenerFn: thingToCall
   };
 
-  this.$$watchers.push(watcher);
+  this.$$watchers.push(obj);
 };
 
 Scope.prototype.$digest = function(){
-  var self = this;
   var newValue;
   var oldValue;
-  _.forEach(this.$$watchers, function(watcher){
-    newValue = watcher.watcherFn(self);
-    oldValue = watcher.last;
+  for(var i = 0; i < this.$$watchers.length; i++){
+    newValue = this.$$watchers[i].watchFn(this);
+    oldValue = this.$$watchers[i].last;
     if(newValue !== oldValue){
-      watcher.last = newValue;
-      watcher.listenerFn(newValue, (oldValue === initWatchVal ? newValue : oldValue),self);
+      this.$$watchers[i].last = newValue;
+      this.$$watchers[i].listenerFn(newValue, oldValue, this);
     }
-  });
+  }
 };
